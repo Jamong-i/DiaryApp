@@ -7,6 +7,11 @@
 
 import UIKit
 
+// 다이어리 객체 전달
+protocol WriteDiaryViewDelegate: AnyObject {
+	func didSelectReigster(diary: Diary)
+}
+
 class WriteDiaryViewController: UIViewController {
 
 	@IBOutlet var titleTextField: UITextField!
@@ -17,6 +22,7 @@ class WriteDiaryViewController: UIViewController {
 	// 날짜 설정 데이터 프로퍼티
 	private let datePicker = UIDatePicker()
 	private var diaryDate: Date?
+	weak var delegate: WriteDiaryViewDelegate?
 	
 	override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +31,13 @@ class WriteDiaryViewController: UIViewController {
 		self.configureInputField()
 		self.confirmButton.isEnabled = false
     }
+	
+	private func dateToString(date: Date) -> String {
+		let formatter = DateFormatter()
+		formatter.dateFormat = "yy년 MM월 dd월(EEEEE)"
+		formatter.locale = Locale(identifier: "ko_KR")
+		return formatter.string(from: date)
+	}
 	
 	// 내용 필드 테두리 설정
 	private func configureContentsTextView() {
@@ -49,6 +62,12 @@ class WriteDiaryViewController: UIViewController {
 	}
 	
 	@IBAction func tapConfirmButton(_ sender: UIBarButtonItem) {
+		guard let title = self.titleTextField.text else { return }
+		guard let contents = self.contentsTextView.text else { return }
+		guard let date = self.diaryDate else { return }
+		let diary = Diary(title: title, contents: contents, date: date, isStar: false)
+		self.delegate?.didSelectReigster(diary: diary)
+		self.navigationController?.popViewController(animated: true)
 	}
 	
 	@objc private func datePickerValueDidChange(_ datePicker: UIDatePicker) {

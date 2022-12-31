@@ -171,7 +171,7 @@
                         <outlet property="confirmButton" destination="F9z-2P-DsM" id="XU8-by-tWu"/>
                         <outlet property="contentsTextView" destination="Y7f-Qi-sJj" id="smG-Zv-78C"/>
                         <outlet property="dateTextField" destination="GE2-0v-75X" id="YRt-sI-zY5"/>
-                        <outlet property="titleTextFiled" destination="oaJ-XF-Cdi" id="Coh-uC-91P"/>
+                        <outlet property="titleTextField" destination="oaJ-XF-Cdi" id="8hm-xS-cIC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wfW-UO-qHo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
