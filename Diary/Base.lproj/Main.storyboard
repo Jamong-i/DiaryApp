@@ -93,7 +93,7 @@
         <!--일기 작성-->
         <scene sceneID="8tU-wE-zPR">
             <objects>
-                <viewController id="oWN-R0-qW2" customClass="WriteDiaryViewController" customModule="Diary" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WriteDiaryViewController" id="oWN-R0-qW2" customClass="WriteDiaryViewController" customModule="Diary" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Xdo-iR-zkW">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -285,7 +285,7 @@
         <!--Diary Detail View Controller-->
         <scene sceneID="arH-aM-Kfe">
             <objects>
-                <viewController id="Uv2-EF-N5f" customClass="DiaryDetailViewController" customModule="Diary" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DiaryDetailViewController" id="Uv2-EF-N5f" customClass="DiaryDetailViewController" customModule="Diary" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kx5-Ok-HID">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -347,6 +347,9 @@
                                         <rect key="frame" x="0.0" y="0.0" width="53.666666666666664" height="34.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="수정"/>
+                                        <connections>
+                                            <action selector="tapEditButton:" destination="Uv2-EF-N5f" eventType="touchUpInside" id="JF2-ZK-wHh"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iwU-lz-6Ae">
                                         <rect key="frame" x="103.66666666666667" y="0.0" width="53.666666666666671" height="34.333333333333336"/>
@@ -354,6 +357,9 @@
                                         <buttonConfiguration key="configuration" style="plain" title="삭제">
                                             <color key="baseForegroundColor" systemColor="systemRedColor"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="tapDeleteButton:" destination="Uv2-EF-N5f" eventType="touchUpInside" id="AoU-sK-s36"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -377,6 +383,12 @@
                             <constraint firstItem="iOq-k5-Nfu" firstAttribute="centerX" secondItem="wTo-WZ-lCN" secondAttribute="centerX" id="xWx-fx-d57"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="contentsTextView" destination="wBV-mK-gyk" id="G6R-Wt-jwG"/>
+                        <outlet property="dateLabel" destination="jFD-o1-0Vf" id="UMW-lW-reF"/>
+                        <outlet property="tapEditButton" destination="oOE-qD-PlO" id="5rz-w4-xih"/>
+                        <outlet property="titleLabel" destination="wse-ay-ogc" id="q9E-HB-SNt"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ds5-4s-Xef" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

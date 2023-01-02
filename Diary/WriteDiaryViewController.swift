@@ -1,5 +1,12 @@
 import UIKit
 
+
+enum DiaryEditorMode {
+	case new
+	case edit(IndexPath, Diary)
+	
+}
+
 // 다이어리 객체 전달
 protocol WriteDiaryViewDelegate: AnyObject {
 	func didSelectReigster(diary: Diary)
@@ -16,14 +23,30 @@ class WriteDiaryViewController: UIViewController {
 	private let datePicker = UIDatePicker()
 	private var diaryDate: Date?
 	weak var delegate: WriteDiaryViewDelegate?
+	var diaryEditorMode: DiaryEditorMode = .new
 	
 	override func viewDidLoad() {
         super.viewDidLoad()
 		self.configureContentsTextView()
 		self.configureDatePicke()
 		self.configureInputField()
+		self.configureEditMode()
 		self.confirmButton.isEnabled = false
     }
+	
+	private func configureEditMode() {
+		switch self.diaryEditorMode {
+		case let .edit(_, diary):
+			self.titleTextField.text = diary.title
+			self.contentsTextView.text = diary.contents
+			self.dateTextField.text = self.dateToString(date: diary.date)
+			self.diaryDate = diary.date
+			self.confirmButton.title = "수정"
+			
+		default:
+			break
+		}
+	}
 	
 	private func dateToString(date: Date) -> String {
 		let formatter = DateFormatter()
@@ -59,6 +82,19 @@ class WriteDiaryViewController: UIViewController {
 		guard let contents = self.contentsTextView.text else { return }
 		guard let date = self.diaryDate else { return }
 		let diary = Diary(title: title, contents: contents, date: date, isStar: false)
+		
+		switch self.diaryEditorMode {
+		case .new:
+			self.delegate?.didSelectReigster(diary: diary)
+			
+		case let .edit(indexPath, _):
+			NotificationCenter.default.post(
+				name: NSNotification.Name("editDairy"),
+				object: diary,
+				userInfo: [
+					"indexPath.row": indexPath.row
+				])
+		}
 		self.delegate?.didSelectReigster(diary: diary)
 		self.navigationController?.popViewController(animated: true)
 	}
