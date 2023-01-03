@@ -7,16 +7,13 @@
 
 import UIKit
 
-protocol DiaryDetailViewDelegate: AnyObject {
-	func didSelectDelete(indexPath: IndexPath)
-}
 
 class DiaryDetailViewController: UIViewController {
 
 	@IBOutlet var titleLabel: UILabel!
 	@IBOutlet var contentsTextView: UITextView!
 	@IBOutlet var dateLabel: UILabel!
-	weak var delegate: DiaryDetailViewDelegate?
+	var startButton: UIBarButtonItem?
 	
 	var diary: Diary?
 	var indexPath: IndexPath?
@@ -32,6 +29,10 @@ class DiaryDetailViewController: UIViewController {
 		self.titleLabel.text = diary.title
 		self.contentsTextView.text = diary.contents
 		self.dateLabel.text = dateToString(date: diary.date)
+		self.startButton = UIBarButtonItem(image: nil, style: .plain, target: self, action: #selector(tapStarButton))
+		self.startButton?.image = diary.isStar ? UIImage(systemName: "star.fill") : UIImage(systemName: "star")
+		self.startButton?.tintColor = .orange
+		self.navigationItem.rightBarButtonItem = self.startButton
 	}
 	
 	private func dateToString(date: Date) -> String {
@@ -59,8 +60,27 @@ class DiaryDetailViewController: UIViewController {
 	
 	@IBAction func tapDeleteButton(_ sender: UIButton) {
 		guard let indexPath = self.indexPath else { return }
-		self.delegate?.didSelectDelete(indexPath: indexPath)
+		NotificationCenter.default.post(name: NSNotification.Name("deleteDiary"), object: indexPath, userInfo: nil)
 		self.navigationController?.popViewController(animated: true)
+	}
+	
+	@objc func tapStarButton() {
+		guard let isStar = self.diary?.isStar else { return }
+		guard let indexPath = self.indexPath else { return }
+		
+		if isStar {
+			self.startButton?.image = UIImage(systemName: "Star")
+		} else {
+			self.startButton?.image = UIImage(systemName: "star.fill")
+		}
+		self.diary?.isStar = !isStar
+		NotificationCenter.default.post(
+			name: NSNotification.Name("starDiaty"),
+			object: [
+				"isStar": self.diary?.isStar ?? false,
+				"indexPath": indexPath
+			],
+			userInfo: nil)
 	}
 	
 	deinit {
