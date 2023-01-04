@@ -16,11 +16,14 @@ class StarViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.configureCollectionView()
+		self.loadStarDiaryList()
+		NotificationCenter.default.addObserver(self, selector: #selector(editDiaryNotification(_:)), name: NSNotification.Name("editDiary"), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(starDiaryNotification(_:)), name: NSNotification.Name("editDiary"), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(deleteDiaryNotification(_:)), name: NSNotification.Name("editDiary"), object: nil)
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		self.loadStarDiaryList()
 	}
 	
 	private func configureCollectionView() {
@@ -51,7 +54,39 @@ class StarViewController: UIViewController {
 		}).sorted(by:  {
 			$0.date.compare($1.date) == .orderedDescending
 		})
+	}
+	
+	@objc func editDiaryNotification(_ notification: Notification) {
+		guard let diary = notification.object as? Diary else { return }
+		guard let row = notification.userInfo?["indexPath.row"] as? Int else { return }
+		self diaryList[row] = diary
+		self.diaryList = self.diaryList.sorted(by: {
+			$0.date.compare($1.date) == .orderedDescending
+		})
 		self.collectionView.reloadData()
+	}
+	
+	@objc func starDiaryNotification(_ notification: Notification) {
+		guard let starDiary = notification.object as? [String: Any] else { return }
+		guard let dairy = starDiary["dairy"] as? Diary else { return }
+		guard let isStar = starDiary["isStar"] as? Bool else { return }
+		guard let indexPath = starDiary["indexPath"] as? IndexPath else { return }
+		if isStar {
+			self.diaryList.append(dairy)
+			self.diaryList = self.diaryList.sorted(by: {
+				$0.date.compare($1.date) == .orderedDescending
+			})
+			self.collectionView.reloadData()
+		} else {
+			self.diaryList.remove(at: indexPath.row)
+			self.collectionView.deleteItems(at: [indexPath])
+		}
+	}
+	
+	@objc func deleteDiaryNotification(_ notification: Notification) {
+		guard let indexPath = notification.object as? IndexPath else { return }
+		self.diaryList.remove(at: indexPath.row)
+		self.collectionView.deleteItems(at: [indexPath])
 	}
 }
 
